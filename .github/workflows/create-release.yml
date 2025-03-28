@@ -1,8 +1,7 @@
 name: Create Release
 
 on:
-  milestone:
-    types: [created, opened, closed]
+  workflow_dispatch:
 
 permissions:
   contents: write
