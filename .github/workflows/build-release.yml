@@ -1,8 +1,8 @@
 name: Create Release
 
 on:
-  push:
-    milestone: [closed]
+  milestone:
+    types: [closed]
 
 jobs:
   version:
