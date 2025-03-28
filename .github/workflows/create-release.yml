@@ -95,7 +95,7 @@ jobs:
   prepare-next:
     needs: release
     runs-on: ubuntu-latest
-    if: ${{ needs.release.outputs.version }}
+    if: ${{ github.event.inputs.postfix != '' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
