@@ -18,6 +18,7 @@ jobs:
           distribution: 'corretto'
           java-version: '24'
           architecture: x64
+          cache: 'maven'
       - name: Build software
         run: mvn -B install --no-transfer-progress --file pom.xml
   release:
@@ -43,6 +44,7 @@ jobs:
           distribution: 'corretto'
           java-version: '24'
           architecture: x64
+          cache: 'maven'
       - name: Configure Git
         run: |
           git config user.name "GitHub Actions"
@@ -94,6 +96,7 @@ jobs:
           distribution: 'corretto'
           java-version: '24'
           architecture: x64
+          cache: 'maven'
       - name: Configure Git
         run: |
           git config user.name "GitHub Actions"
