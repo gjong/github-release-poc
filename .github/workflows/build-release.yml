@@ -18,6 +18,7 @@ jobs:
           echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
   release:
     runs-on: ubuntu-latest
+    needs: version
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,7 +33,6 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
       - name: Set release version
-        needs: version
         run: |
           mvn versions:set -DremoveSnapshot
           git add .
