@@ -48,6 +48,7 @@ jobs:
           mvn versions:set versions:commit -DremoveSnapshot -q
           git add .
           git commit -m "chore: prepare release ${{ needs.version.outputs.version }}"
+          git push
       - name: Tag release
         run: |
           TAG_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
