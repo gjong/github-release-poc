@@ -2,7 +2,7 @@ name: Create Release
 
 on:
   push:
-    branches: [main]
+    milestone: [closed]
 
 jobs:
   version:
@@ -42,16 +42,17 @@ jobs:
           git config user.email "actions@github.com"
       - name: Set release version
         run: |
-          mvn versions:set versions:commit -DremoveSnapshot
-#
-#      - name: Configure Git
-#        run: |
-#          git config user.name "GitHub Actions"
-#          git config user.email "actions@github.com"
-#
-#      - name: Set release version
-#        run: |
-#          mvn versions:set -DnewVersion=${{ github.event.inputs.releaseVersion }}
-#          git add pom.xml
-#          git commit -m "chore: prepare release ${{ github.event.inputs.releaseVersion }}"
-#          git push
+          mvn versions:set versions:commit -DremoveSnapshot -q
+          git add .
+          git commit -m "chore: prepare release ${{ needs.version.outputs.version }}"
+      - name: Tag release
+        run: |
+          TAG_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          git tag ${TAG_VERSION}
+          git push origin ${TAG_VERSION}
+      - name: Prepare next build phase
+        run: |
+          mvn versions:set versions:commit -DnextSnapshot -q
+          git add .
+          git commit -m "chore: prepare snapshot version ${{ needs.version.outputs.version }}"
+          git push
