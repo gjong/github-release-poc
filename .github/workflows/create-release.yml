@@ -60,7 +60,7 @@ jobs:
           RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           if [ -n "${{ github.event.inputs.postfix }}" ]; then
             echo "Appending postfix: ${{ github.event.inputs.postfix }}"
-            mvn versions:set versions:commit "${RELEASE_VERSION}-${{ github.event.inputs.postfix }}"
+            mvn versions:set versions:commit -DnewVersion="${RELEASE_VERSION}-${{ github.event.inputs.postfix }}"
           fi;
           
           RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
