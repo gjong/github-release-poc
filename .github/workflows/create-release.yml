@@ -7,7 +7,21 @@ permissions:
   contents: write
 
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '24'
+          architecture: x64
+      - name: Build software
+        runs: mvn -B install --no-transfer-progress --file pom.xml
   release:
+    needs: validate
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.set_version.outputs.tag_version }}
