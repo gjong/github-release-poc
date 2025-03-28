@@ -32,8 +32,11 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
       - name: Set release version
+        needs: version
         run: |
-          mvn versions:set version:commit -DremoveSnapshot
+          mvn versions:set -DremoveSnapshot
+          git add .
+          git commit -m "chore: prepare for release ${{ needs.version.outputs.version }}"
 #
 #      - name: Configure Git
 #        run: |
