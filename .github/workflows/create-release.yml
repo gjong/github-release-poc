@@ -58,7 +58,7 @@ jobs:
         run: |
           mvn versions:set versions:commit -DremoveSnapshot -q
           RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          if [ -z "${{ github.event.inputs.postfix }}"]; then
+          if [ -n "${{ github.event.inputs.postfix }}"]; then
             RELEASE_VERSION="${RELEASE_VERSION}-${{ github.event.inputs.postfix }}"
           fi;
           echo "Building release for: ${RELEASE_VERSION}"
