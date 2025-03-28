@@ -21,8 +21,8 @@
 		<developer/>
 	</developers>
 	<scm>
-		<connection/>
-		<developerConnection/>
+		<connection>git@github.com:gjong/github-release-poc.git</connection>
+		<developerConnection>git@github.com:gjong/github-release-poc.git</developerConnection>
 		<tag/>
 		<url/>
 	</scm>
