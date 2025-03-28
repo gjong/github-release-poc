@@ -19,7 +19,7 @@ jobs:
           java-version: '24'
           architecture: x64
       - name: Build software
-        runs: mvn -B install --no-transfer-progress --file pom.xml
+        run: mvn -B install --no-transfer-progress --file pom.xml
   release:
     needs: validate
     runs-on: ubuntu-latest
