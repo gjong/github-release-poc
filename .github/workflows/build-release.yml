@@ -2,7 +2,7 @@ name: Create Release
 
 on:
   milestone:
-    types: [closed]
+    types: [created, closed]
 
 permissions:
   contents: write
