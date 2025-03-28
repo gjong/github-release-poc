@@ -115,8 +115,10 @@ jobs:
       - name: Prepare next build phase
         run: |
           if [ -z "${{ needs.release.outputs.next_version }}" ]; then
+            echo "Setting next version as snapshot"
             mvn versions:set versions:commit -DnextSnapshot -q
           else
+            echo "Setting next version: ${{ needs.release.outputs.next_version }}"
             mvn versions:set versions:commit -DnextVersion="${{ needs.release.outputs.next_version }}" -q          
           fi;
           NEXT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
