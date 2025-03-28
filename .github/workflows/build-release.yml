@@ -16,21 +16,24 @@ jobs:
           NEW_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "Building for version: ${NEW_VERSION}"
           echo "version=${NEW_VERSION}" >> $GITHUB_OUTPUT
-#  release:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v4
-#
-#      - name: Determine current version
-#
-#
-#      - name: Set up JDK
-#        uses: actions/setup-java@v4
-#        with:
-#          distribution: 'corretto'
-#          java-version: '24'
-#          architecture: x64
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '24'
+          architecture: x64
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      - name: Set release version
+        run: |
+          mvn versions:set version:commit -DremoveSnapshot
 #
 #      - name: Configure Git
 #        run: |
