@@ -36,6 +36,7 @@ jobs:
         id: current_version
         run: |
           CURRENT_SNAPSHOT=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "Project version is: ${CURRENT_SNAPSHOT}"
           if [[ "${CURRENT_SNAPSHOT}" != *"-SNAPSHOT"* ]]; then
             echo "Release version is correct (does not contain -SNAPSHOT)"
           else
