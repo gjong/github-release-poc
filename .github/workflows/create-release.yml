@@ -13,6 +13,8 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.determine_version.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,28 +27,28 @@ jobs:
           cache: 'maven'
       - name: Build software
         run: mvn -B install --no-transfer-progress --file pom.xml
-  release:
-    needs: validate
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.set_version.outputs.tag_version }}
-      next_version: ${{ steps.current_version.outputs.next_version }}
-    steps:
-      - name: Check version format
-        id: current_version
+      - name: Determine version
+        id: determine_version
         run: |
-          CURRENT_SNAPSHOT="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-          echo "Project version is: ${CURRENT_SNAPSHOT}"
-          if [[ "${CURRENT_SNAPSHOT}" != *"-SNAPSHOT"* ]]; then
+          current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "Current version: ${current_version}
+          echo "version=${CURRENT_SNAPSHOT}" >> $GITHUB_OUTPUT
+          echo "version=${CURRENT_SNAPSHOT}" >> $GITHUB_EVN
+      - name: Check if snapshot
+        run: |
+          echo "Project version is: ${{ env.version }}"
+          if [[ "${{ env.version }}" != *"-SNAPSHOT"* ]]; then
             echo "::error::Release version should contain -SNAPSHOT"
             exit 1
           else
             echo "Release version is correct (contains -SNAPSHOT)"
           fi
-          
-          if [ -n "${{ github.event.inputs.postfix }}" ]; then
-            echo "next_version=${CURRENT_SNAPSHOT}" >> $GITHUB_OUTPUT
-          fi
+  release:
+    needs: validate
+    runs-on: ubuntu-latest
+    outputs:
+      tagged: ${{ steps.set_version.outputs.tag_version }}
+    steps:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Set up JDK
@@ -86,13 +88,13 @@ jobs:
   github-release:
     needs: release
     runs-on: ubuntu-latest
-    if: ${{ needs.release.outputs.version }}
+    if: ${{ needs.release.outputs.tagged }}
     steps:
       - name: Create github release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ needs.release.outputs.version }}
-          name: Release ${{ needs.release.outputs.version }}
+          tag_name: ${{ needs.release.outputs.tagged }}
+          name: Release ${{ needs.release.outputs.tagged }}
           draft: false
           prerelease: false
           generate_release_notes: true
@@ -119,11 +121,10 @@ jobs:
           git pull
       - name: Prepare next build phase
         run: |
-          echo "Next version set: ${{ needs.release.outputs.next_version }}"
-          if [ -z "${{ needs.release.outputs.next_version }}" ]; then
-            mvn versions:set versions:commit -DnextSnapshot -q
+          if [ -n "${{ github.event.inputs.postfix }}" ]; then
+            mvn versions:set versions:commit -DnextVersion="${{ needs.validate.outputs.version }}" -q
           else
-            mvn versions:set versions:commit -DnextVersion="${{ needs.release.outputs.next_version }}" -q          
+            mvn versions:set versions:commit -DnextSnapshot -q
           fi;
           NEXT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "NEXT_VERSION=${NEXT_VERSION}" >> $GITHUB_ENV
