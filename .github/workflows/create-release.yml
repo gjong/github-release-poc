@@ -35,13 +35,13 @@ jobs:
       - name: Check version format
         id: current_version
         run: |
-          CURRENT_SNAPSHOT=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          CURRENT_SNAPSHOT="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
           echo "Project version is: ${CURRENT_SNAPSHOT}"
           if [[ "${CURRENT_SNAPSHOT}" != *"-SNAPSHOT"* ]]; then
-            echo "Release version is correct (does not contain -SNAPSHOT)"
-          else
-            echo "::error::Release version should not contain -SNAPSHOT"
+            echo "::error::Release version should contain -SNAPSHOT"
             exit 1
+          else
+            echo "Release version is correct (contains -SNAPSHOT)"
           fi
           
           if [ -n "${{ github.event.inputs.postfix }}" ]; then
