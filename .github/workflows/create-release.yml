@@ -33,7 +33,7 @@ jobs:
           current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "Current version: ${current_version}"
           echo "version=${CURRENT_SNAPSHOT}" >> $GITHUB_OUTPUT
-          echo "version=${CURRENT_SNAPSHOT}" >> $GITHUB_EVN
+          echo "version=${CURRENT_SNAPSHOT}" >> $GITHUB_ENV
       - name: Check if snapshot
         run: |
           echo "Project version is: ${{ env.version }}"
