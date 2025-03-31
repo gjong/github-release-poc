@@ -33,11 +33,11 @@ jobs:
           current_version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "Current version: ${current_version}"
           echo "version=${CURRENT_SNAPSHOT}" >> $GITHUB_OUTPUT
-          echo "version=${CURRENT_SNAPSHOT}" >> $GITHUB_ENV
+          echo "CURRENT_VERSION=${CURRENT_SNAPSHOT}" >> $GITHUB_ENV
       - name: Check if snapshot
         run: |
-          echo "Project version is: ${{ env.version }}"
-          if [[ "${{ env.version }}" != *"-SNAPSHOT"* ]]; then
+          echo "Project version is: ${{ env.CURRENT_VERSION }}"
+          if [[ "${{ env.CURRENT_VERSION }}" != *"-SNAPSHOT"* ]]; then
             echo "::error::Release version should contain -SNAPSHOT"
             exit 1
           else
