@@ -124,7 +124,7 @@ jobs:
       - name: Prepare next build phase
         run: |
           if [ -n "${{ github.event.inputs.postfix }}" ]; then
-            mvn versions:set versions:commit -DnextVersion="${{ needs.validate.outputs.version }}" -q
+            mvn versions:set versions:commit -DnewVersion="${{ needs.validate.outputs.version }}" -q
           else
             mvn versions:set versions:commit -DnextSnapshot -q
           fi;
