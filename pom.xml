@@ -8,7 +8,7 @@
 		<version>3.4.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.github.gjong</groupId>
+	<groupId>com.jongsoft.demo</groupId>
 	<artifactId>release-poc</artifactId>
 	<version>0.0.18-SNAPSHOT</version>
 	<name>release-poc</name>
