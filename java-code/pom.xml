@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.jongsoft.demo</groupId>
 		<artifactId>release-poc</artifactId>
-		<version>0.0.20-SNAPSHOT</version>
+		<version>1.0.0</version>
 	</parent>
 	<artifactId>java-code</artifactId>
 	<name>release-poc-java</name>
