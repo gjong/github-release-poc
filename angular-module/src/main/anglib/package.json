@@ -1,5 +1,5 @@
 {
-  "name": "anglib",
+  "name": "@gjong/anglib",
   "version": "0.0.20-SNAPSHOT",
   "scripts": {
     "ng": "ng",

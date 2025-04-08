@@ -18,6 +18,8 @@
         <npm.version>10.9.0</npm.version>
     </properties>
 
+    <packaging>pom</packaging>
+
     <build>
         <plugins>
             <plugin>
@@ -71,7 +73,95 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/</directory>
+                                    <includes>
+                                        <include>.npmrc</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <outputDirectory>src/main/anglib/dist/anglib1</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>github</id>
+            <properties>
+                <node.auth_token/>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.7.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <skipPublishing>true</skipPublishing>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <version>1.15.1</version>
+                        <configuration>
+                            <workingDirectory>src/main/anglib/</workingDirectory>
+                            <installDirectory>target</installDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>fixate-version</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>version --allow-same-version ${project.version}</arguments>
+                                    <workingDirectory>src/main/anglib/dist/anglib1</workingDirectory>
+                                </configuration>
+                                <phase>package</phase>
+                            </execution>
+                            <execution>
+                                <id>publish</id>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <arguments>publish --access public</arguments>
+                                    <workingDirectory>src/main/anglib/dist/anglib1</workingDirectory>
+<!--                                    <environmentVariables>-->
+<!--                                        <NODE_AUTH_TOKEN>${node.auth_token}</NODE_AUTH_TOKEN>-->
+<!--                                    </environmentVariables>-->
+                                </configuration>
+                                <phase>deploy</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

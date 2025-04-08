@@ -1,5 +1,5 @@
 {
-  "name": "anglib1",
+  "name": "@gjong/anglib1",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^18.2.0",
